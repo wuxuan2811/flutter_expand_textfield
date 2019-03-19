@@ -150,30 +150,31 @@ class MyTextEditingController extends TextEditingController {
 
   void paste(String textStr){
     List<SuperTextInfo> infos = toInfos(textStr);
+    int acc = 0;
     int indertCursor = -1;
     String insertStr = "";
-    for(SuperTextInfo info in infos){
+    for (SuperTextInfo info in infos) {
       if (selectionStart > selectionEnd) {
         return;
       }
+      if (indertCursor == -1) {
+        var spans = toInfos();
+        int i = 0;
 
-      var spans = toInfos();
-      int i = 0;
-      int acc = 0;
-      int diff;
-      SuperTextInfo _span;
-      for (_span in spans) {
-        diff = selectionEnd - i;
+        int diff;
+        SuperTextInfo _span;
+        for (_span in spans) {
+          diff = selectionEnd - i;
 
-        if (!(_span is TextInfo)) {
-          acc++;
+          if (!(_span is TextInfo)) {
+            acc++;
+          }
+          if (diff > 0 && diff <= _span.length) {
+            break;
+          }
+          i += _span.length;
         }
-        if (diff > 0 && diff <= _span.length) {
-          break;
-        }
-        i += _span.length;
-      }
-      if(indertCursor == -1){
+
         indertCursor = selectionEnd;
         if (_span != null && !(_span is TextInfo)) {
           indertCursor = i + _span.length;
@@ -183,6 +184,7 @@ class MyTextEditingController extends TextEditingController {
       insertStr += info.toString();
       if (!(info is TextInfo)) {
         _spanInfos.insert(acc, info);
+        acc++;
       }
     }
 
