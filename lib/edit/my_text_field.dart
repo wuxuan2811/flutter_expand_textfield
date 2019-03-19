@@ -11,6 +11,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'my_editable_text.dart';
 import 'my_editable.dart';
+import 'my_text_selection_control.dart';
 
 /// A material design text field.
 ///
@@ -587,7 +588,8 @@ class _MyTextFieldState extends State<MyTextField> with AutomaticKeepAliveClient
         selectionControls: widget.enableInteractiveSelection
           ? (themeData.platform == TargetPlatform.iOS
              ? cupertinoTextSelectionControls
-             : materialTextSelectionControls)
+             //: materialTextSelectionControls)
+              :MyTextSelectionControls(controller))
           : null,
         onChanged: widget.onChanged,
         onEditingComplete: widget.onEditingComplete,

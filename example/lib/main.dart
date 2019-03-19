@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
-// import 'src/my_rich.dart';
 import 'package:rich_textfield/rich_textfield.dart';
 import 'package:flutter/rendering.dart';
 import 'my_rich_text.dart';
@@ -83,6 +81,13 @@ class _MyAppState extends State<MyApp> {
                   },
                 ),
                 new RaisedButton(
+                  child: new Text("复制"),
+                  onPressed: () {
+                    _copy(new EmojiInfo(
+                        id: 0,
+                        url: "packages/real_rich_text/images/emoji_9.png").toServerString());
+                  },),
+                new RaisedButton(
                   child: new Text("clear"),
                   onPressed: () {
                     _editCtrl.clear();
@@ -147,5 +152,23 @@ class _MyAppState extends State<MyApp> {
             new TextStyle(fontWeight: FontWeight.bold, color: Colors.green),
       ),
     );
+  }
+
+
+
+  _copy(String content){
+    Clipboard.setData(new ClipboardData(text: content));
+    ScaffoldState state = Scaffold.of(context);
+    Container container = Container(
+      child: Text(
+        "已复制到粘贴板",
+      ),
+      height: 23.0,
+    );
+    SnackBar snackBar = SnackBar(
+      content: container,
+      duration: Duration(milliseconds: 300),
+    );
+    state.showSnackBar(snackBar);
   }
 }

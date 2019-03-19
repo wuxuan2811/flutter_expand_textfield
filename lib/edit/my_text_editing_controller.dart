@@ -148,6 +148,52 @@ class MyTextEditingController extends TextEditingController {
     setText(newText, newSelection);
   }
 
+  void paste(String textStr){
+    List<SuperTextInfo> infos = toInfos(textStr);
+    int indertCursor = -1;
+    String insertStr = "";
+    for(SuperTextInfo info in infos){
+      if (selectionStart > selectionEnd) {
+        return;
+      }
+
+      var spans = toInfos();
+      int i = 0;
+      int acc = 0;
+      int diff;
+      SuperTextInfo _span;
+      for (_span in spans) {
+        diff = selectionEnd - i;
+
+        if (!(_span is TextInfo)) {
+          acc++;
+        }
+        if (diff > 0 && diff <= _span.length) {
+          break;
+        }
+        i += _span.length;
+      }
+      if(indertCursor == -1){
+        indertCursor = selectionEnd;
+        if (_span != null && !(_span is TextInfo)) {
+          indertCursor = i + _span.length;
+        }
+      }
+
+      insertStr += info.toString();
+      if (!(info is TextInfo)) {
+        _spanInfos.insert(acc, info);
+      }
+    }
+
+    String newText = this.text.substring(0, indertCursor) +
+        insertStr +
+        this.text.substring(indertCursor);
+    TextSelection newSelection =
+    new TextSelection.collapsed(offset: indertCursor + insertStr.length);
+    setText(newText, newSelection);
+  }
+
   final RegExp _reg = new RegExp(
       TopicInfo.regStr + "|" + AtInfo.regStr + "|" + EmojiInfo.regStr);
 
