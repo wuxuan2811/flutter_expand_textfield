@@ -2,7 +2,7 @@
 
 flutter富文本输入框，支持表情、@某人、#话题#
 
-![The example screen shot](https://github.com/hyz1992/rich_textfield/blob/master/screenShot/screenshot_1.jpg)
+![The example screen shot](https://https://github.com/wuxuan2811/flutter_expand_textfield/tree/master/screenShot/Screenshot_1.jpg)
 
 ## 使用方法
 ```Dart
