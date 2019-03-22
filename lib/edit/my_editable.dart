@@ -955,7 +955,12 @@ class MyRenderEditable extends RenderBox {
 
   double _preferredHeight(double width) {
     if (maxLines != null)
-      return preferredLineHeight * maxLines;
+      if(_textPainter.height < preferredLineHeight * maxLines){
+        return _textPainter.height;
+      }else{
+        return preferredLineHeight * maxLines;
+      }
+
     if (width == double.infinity) {
       final String text = _textPainter.text.toPlainText();
       int lines = 1;

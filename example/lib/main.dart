@@ -123,12 +123,13 @@ class _MyAppState extends State<MyApp> {
           hintStyle: new TextStyle(
               fontSize: 20, color: const Color.fromARGB(255, 180, 180, 180))),
       maxLength: 1000,
-      maxLines: null,
+      maxLines: 3,
       onTap: () {
         print("onTap");
       },
     );
-    ret = new Padding(
+    ret = new Container(
+      width: 180,
       padding: new EdgeInsets.symmetric(horizontal: 60),
       child: ret,
     );
