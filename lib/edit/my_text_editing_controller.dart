@@ -200,6 +200,8 @@ class MyTextEditingController extends TextEditingController {
       TopicInfo.regStr + "|" + AtInfo.regStr + "|" + EmojiInfo.regStr);
 
   List<SuperTextInfo> toInfos([String textStr]) {
+    //先屏蔽输入法自带Emoji，因为删除有误
+    setText(text.replaceAll(new RegExp("[\ud800-\udbff][\udc00-\udfff]"), ''));
     List<SuperTextInfo> list = [];
     textStr = textStr ?? this.text;
     var matches = _reg.allMatches(textStr);
