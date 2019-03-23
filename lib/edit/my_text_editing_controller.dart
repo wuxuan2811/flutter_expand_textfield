@@ -148,7 +148,7 @@ class MyTextEditingController extends TextEditingController {
     setText(newText, newSelection);
   }
 
-  void paste(String textStr){
+  void paste(String textStr) {
     List<SuperTextInfo> infos = toInfos(textStr);
     int acc = 0;
     int indertCursor = -1;
@@ -192,7 +192,7 @@ class MyTextEditingController extends TextEditingController {
         insertStr +
         this.text.substring(indertCursor);
     TextSelection newSelection =
-    new TextSelection.collapsed(offset: indertCursor + insertStr.length);
+        new TextSelection.collapsed(offset: indertCursor + insertStr.length);
     setText(newText, newSelection);
   }
 
@@ -201,7 +201,7 @@ class MyTextEditingController extends TextEditingController {
 
   List<SuperTextInfo> toInfos([String textStr]) {
     //先屏蔽输入法自带Emoji，因为删除有误
-    setText(text.replaceAll(new RegExp("[\ud800-\udbff][\udc00-\udfff]"), ''));
+    _replaceInputEmoji();
     List<SuperTextInfo> list = [];
     textStr = textStr ?? this.text;
     var matches = _reg.allMatches(textStr);
@@ -223,6 +223,48 @@ class MyTextEditingController extends TextEditingController {
       list.add(new TextInfo(text: str));
     }
     return list;
+  }
+
+  final RegExp _regEmojiErr = new RegExp("[\ud800-\udbff]");
+  final RegExp _regEmoj = new RegExp("[\ud800-\udbff][\udc00-\udfff]");
+
+  _replaceInputEmoji() {
+    if (_regEmojiErr.hasMatch(text)) {
+      var matches = _regEmojiErr.allMatches(text);
+      String replace = '';
+      int i = 0;
+      bool isChange = false;
+      for (var match in matches) {
+        String str;
+        if (i != match.start) {
+          str = text.substring(i, match.start);
+          if (str.isNotEmpty) {
+            replace += str;
+          }
+        }
+        if (match.end >= text.length) {
+          str = text.substring(match.start);
+        } else {
+          str = text.substring(match.start, match.end + 1);
+        }
+
+        if (!_regEmoj.hasMatch(str) && _regEmojiErr.hasMatch(str)) {
+          str = str.replaceAll(_regEmojiErr, '');
+          i = match.end;
+          isChange = true;
+        }
+        else{
+          i = match.end + 1;
+        }
+
+        if (str.isNotEmpty) {
+          replace += str;
+        }
+      }
+      if (isChange) {
+        setText(replace);
+      }
+    }
   }
 
   List<TextSpan> toTextSpans() {
