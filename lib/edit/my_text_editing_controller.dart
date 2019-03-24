@@ -234,8 +234,9 @@ class MyTextEditingController extends TextEditingController {
       String replace = '';
       int i = 0;
       bool isChange = false;
+      String str;
+      int indertCursor = selectionEnd;
       for (var match in matches) {
-        String str;
         if (i != match.start) {
           str = text.substring(i, match.start);
           if (str.isNotEmpty) {
@@ -250,19 +251,23 @@ class MyTextEditingController extends TextEditingController {
 
         if (!_regEmoj.hasMatch(str) && _regEmojiErr.hasMatch(str)) {
           str = str.replaceAll(_regEmojiErr, '');
-          i = match.end;
+          indertCursor = match.start;
           isChange = true;
         }
-        else{
-          i = match.end + 1;
-        }
+        i = match.end + 1;
 
         if (str.isNotEmpty) {
           replace += str;
         }
       }
+      if (i < text.length) {
+        str = text.substring(i);
+        replace += str;
+      }
       if (isChange) {
-        setText(replace);
+        TextSelection newSelection =
+            new TextSelection.collapsed(offset: indertCursor);
+        setText(replace, newSelection);
       }
     }
   }
